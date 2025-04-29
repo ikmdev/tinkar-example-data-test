@@ -1,0 +1,120 @@
+name: Generate Data Pipeline
+
+run-name: Generate Data Pipeline -- ${{github.ref_name || github.head_ref}}
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        type: choice
+        description: "Enter Tag Name"
+        required: true
+        options:
+          - 1.1.5
+          - 1.1.4
+          - 1.1.2
+          - 1.1.1
+          - 1.1.0
+          - 1.0.0
+
+      properties_version:
+        type: choice
+        description: "Enter Properties Version"
+        required: true
+        options:
+          - 1.2.0
+          - 1.1.1
+          - 1.1.0
+          - 1.0.0
+env:
+  DATA_PROPERTIES_VERSION: tinkar-example-data-properties.version=${{inputs.properties_version}}
+
+jobs:
+  generate-data:
+    name: Generate Data
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{inputs.tag_name}}
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '23'
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_CENTRAL_TOKEN
+          gpg-private-key: ${{secrets.GPG_KEY}}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Maven Settings File
+        uses: whelk-io/maven-settings-xml-action@v22
+        with:
+          servers: '[{"id": "maven-releases", "username": "admin", "password": "${{secrets.EC2_NEXUS_PASSWORD}}"}]'
+          profiles: '[{"id": "nexus-profile", "properties": {"altDeploymentRepository": "maven-releases::https://nexus.tinkarbuild.com/repository/maven-releases"}}]'
+          active_profiles: '["nexus-profile"]'
+          output_file: .m2/settings.xml
+
+      - name: Maven Build
+        run: |
+              mvn clean install \
+                --batch-mode \
+                -U \
+                -e \
+                -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+                -Dmaven.build.cache.enabled=false \
+                -PcodeQuality \
+                -PgenerateData \
+                -D${{env.DATA_PROPERTIES_VERSION}} \
+                ${{  steps.version_verification.outputs.RELEASE_ENFORCEMENT  }} 
+              
+  
+      - name: Deploy To Nexus
+        run: |
+            mvn deploy \
+                --batch-mode \
+                -U \
+                -e \
+                -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+                -DskipTests \
+                -DskipITs \
+                -s '/home/runner/work/${{github.event.repository.name}}/${{github.event.repository.name}}/.m2/settings.xml'\
+                -DrepositoryId='maven-releases' \
+                -D${{env.DATA_PROPERTIES_VERSION}} 
+  
+      - name: Version Verification
+        run: |
+            CURRENT_VERSION=$(mvn help:evaluate -D'expression=project.version' -q -D'forceStdout') 
+            if [[ "$CURRENT_VERSION" == *"SNAPSHOT"* ]]; then
+                echo "::error::Current Version $CURRENT_VERSION Is Invalid"
+                exit
+            fi
+            
+  
+      - name: Publish To OSSRH (Maven Central Staging) 
+        run: |
+             mvn deploy \
+                --batch-mode \
+                -e \
+                -U \
+                -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+                -DskipTests \
+                -DskipITs \
+                -Dmaven.main.skip \
+                -Dmaven.test.skip \
+                -DrepositoryId=ossrh \
+                -DrepositoryIdOSSRH='true' \
+                -PstageOSSRH \
+                -PdeployReleaseDataArtifacts \
+                -Dmaven.deploy.skip=true \
+                -DskipNexusStagingDeployMojo=true \
+                -Dmaven.build.cache.enabled=false \
+                -D${{env.DATA_PROPERTIES_VERSION}}  
+                     
+        env:
+              MAVEN_USERNAME: ${{secrets.OSSRH_TOKEN_USER}}
+              MAVEN_CENTRAL_TOKEN: ${{secrets.OSSRH_TOKEN_PASS}}
+              MAVEN_GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}

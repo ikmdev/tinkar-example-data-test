@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>dev.ikm.build</groupId>
+        <artifactId>java-parent</artifactId>
+        <version>1.58.0</version>
+    </parent>
+
+    <groupId>dev.ikm.maven.tinkar</groupId>
+    <artifactId>tinkar-example-data-parent-test</artifactId>
+    <version>1.1.6-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Tinkar Example Data Parent</name>
+    <description>Tinkar Example Data Parent Project</description>
+    <url>http://www.ikm.dev</url>
+
+    <organization>
+        <name>Integrated Knowledge Management</name>
+        <url>http://www.ikm.dev</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
+    <developers>
+        <!-- OSSRH Related Developer (Start) -->
+        <developer>
+            <id>ikmdev</id>
+            <name>IKM Development Team</name>
+            <email>support@ikm.dev</email>
+        </developer>
+        <!-- OSSRH Related Developer (End) -->
+    </developers>
+
+    <scm>
+        <url>http://www.github.com/ikmdev/tinkar-example-data</url>
+    </scm>
+
+    <properties>
+        <!-- Tinkar dependencies -->
+        <tinkar-core.version>1.95.0</tinkar-core.version>
+        <tinkar-composer.version>1.6.0</tinkar-composer.version>
+        <tinkar-maven-artifacts.version>1.20.0</tinkar-maven-artifacts.version>
+        <!-- JPMS-wrapped dependencies -->
+        <eclipse-collections-api.version>11.1.0-r11</eclipse-collections-api.version>
+        <!-- Maven dependencies -->
+        <maven-plugin-plugin.version>3.15.1</maven-plugin-plugin.version>
+        <maven-plugin-annotations.version>3.15.1</maven-plugin-annotations.version>
+        <maven-plugin-api.version>3.9.8</maven-plugin-api.version>
+        <maven-dependency-plugin>3.8.1</maven-dependency-plugin>
+        <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
+        <properties-maven-plugin.version>1.2.1</properties-maven-plugin.version>
+        <variable-search-replace-plugin.version>1.3</variable-search-replace-plugin.version>
+        <!-- Testing dependencies -->
+        <jupiter.version>5.10.0</jupiter.version>
+        <!-- Logging dependencies -->
+        <log4j.version>3.0.0-alpha1</log4j.version>
+        <slf4j.version>2.0.13</slf4j.version>
+         <!-- Templating Plugin Version-->
+        <templating-maven-plugin.version>3.0.0</templating-maven-plugin.version>
+    </properties>
+
+    <modules>
+        <module>tinkar-example-data-maven-plugin</module>
+        <module>tinkar-example-data-pipeline</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>dev.ikm.tinkar</groupId>
+                <artifactId>entity-provider</artifactId>
+                <version>${tinkar-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.ikm.tinkar</groupId>
+                <artifactId>entity</artifactId>
+                <version>${tinkar-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.ikm.tinkar</groupId>
+                <artifactId>common</artifactId>
+                <version>${tinkar-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.ikm.tinkar</groupId>
+                <artifactId>composer</artifactId>
+                <version>${tinkar-composer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.ikm.tinkar</groupId>
+                <artifactId>data-spinedarray-provider</artifactId>
+                <version>${tinkar-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.ikm.tinkar</groupId>
+                <artifactId>executor-provider</artifactId>
+                <version>${tinkar-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.ikm.jpms</groupId>
+                <artifactId>eclipse-collections-api</artifactId>
+                <version>${eclipse-collections-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <version>${maven-plugin-plugin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-plugin-api</artifactId>
+                <version>${maven-plugin-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.ikm.maven.tinkar</groupId>
+                <artifactId>tinkar-maven-toolkit</artifactId>
+                <version>${tinkar-maven-artifacts.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.plugin-tools</groupId>
+                <artifactId>maven-plugin-annotations</artifactId>
+                <version>${maven-plugin-annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.ikm.tinkar</groupId>
+                <artifactId>coordinate</artifactId>
+                <version>${tinkar-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.ikm.tinkar</groupId>
+                <artifactId>terms</artifactId>
+                <version>${tinkar-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.ikm.tinkar</groupId>
+                <artifactId>search-provider</artifactId>
+                <version>${tinkar-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j2-impl</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.ikm.tinkar.ext.owl</groupId>
+                <artifactId>owl-extension</artifactId>
+                <version>${tinkar-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${jupiter.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>dev.ikm.maven.tinkar</groupId>
+                    <artifactId>tinkar-example-data-maven-plugin</artifactId>
+                    <version>${project.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>dev.ikm.maven.tinkar</groupId>
+                    <artifactId>tinkar-maven-plugin</artifactId>
+                    <version>${tinkar-maven-artifacts.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>${maven-plugin-plugin.version}</version>
+                    <configuration>
+                        <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven-dependency-plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>properties-maven-plugin</artifactId>
+                    <version>${properties-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven-gpg-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>io.github.1tchy</groupId>
+                    <artifactId>variable-search-replace-plugin</artifactId>
+                    <version>${variable-search-replace-plugin.version}</version>
+                </plugin>
+                <!-- Templating Plugin-->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>templating-maven-plugin</artifactId>
+                    <version>${templating-maven-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>localDeploy</id>
+            <distributionManagement>
+                <repository>
+                    <id>local-release</id>
+                    <name>Local Release Repository</name>
+                    <url>file:${project.build.directory}/local_deploy_repo/release</url>
+                </repository>
+                <snapshotRepository>
+                    <id>local-snapshot</id>
+                    <name>Local SNAPSHOT Repository</name>
+                    <url>file:${project.build.directory}/local_deploy_repo/snapshot</url>
+                </snapshotRepository>
+            </distributionManagement>
+            <properties>
+                <repositoryId>local-snapshot</repositoryId>
+                <deployRepositoryUrl>file:${project.build.directory}/local_deploy_repo/snapshot</deployRepositoryUrl>
+            </properties>
+        </profile>
+    </profiles>
+</project>
+
