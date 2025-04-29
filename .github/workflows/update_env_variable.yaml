@@ -81,7 +81,11 @@ jobs:
               # path: patches
 
         - name: Testing files
-          run: ls
+          run: |
+            # ls
+            cat update_build.patch
+            cat update_post_build.patch
+            cat update_release.patch
           
             
           
