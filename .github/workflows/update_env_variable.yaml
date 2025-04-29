@@ -39,4 +39,43 @@ jobs:
           env:
               LATEST_VERSION:  ${{github.event.client_payload.version}}
               FILE_NAME: ${{matrix.file-name}}
+
+        - name: Upload ${{matrix.file-name}} File
+          uses: actions/upload-artifact@v4
+          with:
+            name: update_$FILE_NAME.patch
+            path: update_$FILE_NAME.patch
+
+    commit-updates:
+      name: Commit Updates
+      runs-on: ubuntu-24.04
+      needs: update-job
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v4
+          with:
+            token: ${{secrets.IKMDEVOPS_PAT_TOKEN}}
+
+        - name: Download Files
+          uses: actions/download-artifact@v3
+          with:
+            name: update_build.yaml
+            path: patches
+
+        - name: Download Files
+          uses: actions/download-artifact@v3
+          with:
+              name: update_post_build.yaml
+              path: patches
+
+        - name: Download Files
+          uses: actions/download-artifact@v3
+          with:
+              name: update_release.yaml
+              path: patches
+
+        - name: Testing files
+          run: ls patches
+          
+            
           
