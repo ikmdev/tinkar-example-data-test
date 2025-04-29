@@ -4,9 +4,14 @@ run-name: 'Update Environment Workflow -- DATA_PROPERTIES_VERSION:${{github.even
 
 # Pipeline/Workflow Triggers
 on:
-    repository_dispatch:
-        types:
-          - update-repository-dispatch-trigger
+   workflow_dispatch:
+    # repository_dispatch:
+    #     types:
+    #       - update-repository-dispatch-trigger
+
+
+env:
+  TEST: 1.3.4
 
 jobs:
     update-job:
@@ -29,22 +34,22 @@ jobs:
                 git pull -p
 
                 echo "Updating DATA_PROPERTIES_VERSION environment to $LATEST_VERSION tag in $FILE_NAME"
-                yq e -i '.env.DATA_PROPERTIES_VERSION = "${{github.event.client_payload.version}}"' .github/workflows/$FILE_NAME.yaml
+                yq e -i '.env.DATA_PROPERTIES_VERSION = "${{env.TEST}}"' .github/workflows/$FILE_NAME.yaml
                 git diff -U1 -w --ignore-blank-lines | grep -E "\-\-\-|[\+\-]\s+DATA_PROPERTIES_VERSION" -B2 -A1| grep -v "^--$"  > update_$FILE_NAME.patch
-                git restore .
-                git apply update_$FILE_NAME.patch
-                git pull -p;
-                git commit -am"Updated DATA_PROPERTIES_VERSION environment to $LATEST_VERSION in $FILE_NAME"
-                git push
+                # git restore .
+                # git apply update_$FILE_NAME.patch
+                # git pull -p;
+                # git commit -am"Updated DATA_PROPERTIES_VERSION environment to $LATEST_VERSION in $FILE_NAME"
+                # git push
           env:
-              LATEST_VERSION:  ${{github.event.client_payload.version}}
+              LATEST_VERSION:  ${{env.TEST}}
               FILE_NAME: ${{matrix.file-name}}
 
         - name: Upload ${{matrix.file-name}} File
           uses: actions/upload-artifact@v4
           with:
-            name: update_$FILE_NAME.patch
-            path: update_$FILE_NAME.patch
+            name: update_${{matrix.file-name}}.patch
+            path: update_${{matrix.file-name}}.patch
 
     commit-updates:
       name: Commit Updates
