@@ -33,6 +33,7 @@ jobs:
                 git diff -U1 -w --ignore-blank-lines | grep -E "\-\-\-|[\+\-]\s+DATA_PROPERTIES_VERSION" -B2 -A1| grep -v "^--$"  > update_$FILE_NAME.patch
                 git restore .
                 git apply update_$FILE_NAME.patch
+                git pull -p;
                 git commit -am"Updated DATA_PROPERTIES_VERSION environment to $LATEST_VERSION in $FILE_NAME"
                 git push
           env:
