@@ -81,7 +81,7 @@ jobs:
               # path: patches
 
         - name: Testing files
-          run: ls patches
+          run: ls
           
             
           
