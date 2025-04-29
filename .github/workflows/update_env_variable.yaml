@@ -63,22 +63,22 @@ jobs:
             token: ${{secrets.IKMDEVOPS_PAT_TOKEN}}
 
         - name: Download Files
-          uses: actions/download-artifact@v3
+          uses: actions/download-artifact@v4
           with:
             name: update_build.patch
-            path: patches
+            # path: patches
 
         - name: Download Files
-          uses: actions/download-artifact@v3
+          uses: actions/download-artifact@v4
           with:
               name: update_post_build.patch
-              path: patches
+              # path: patches
 
         - name: Download Files
-          uses: actions/download-artifact@v3
+          uses: actions/download-artifact@v4
           with:
               name: update_release.patch
-              path: patches
+              # path: patches
 
         - name: Testing files
           run: ls patches
