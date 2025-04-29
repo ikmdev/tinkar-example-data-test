@@ -17,7 +17,7 @@ jobs:
     update-job:
         name: Update Environment Property
         runs-on: ubuntu-24.04
-        if: github.event_name == 'repository_dispatch' && github.repository_owner == 'ikmdev'
+        # if: github.event_name == 'repository_dispatch' && github.repository_owner == 'ikmdev'
         strategy:
             matrix:
                 file-name: [build, post_build, release]
