@@ -80,12 +80,18 @@ jobs:
               name: update_release.patch
               # path: patches
 
-        - name: Testing files
+        - name: Commit Changes
           run: |
-            # ls
-            cat update_build.patch
-            cat update_post_build.patch
-            cat update_release.patch
+                git config user.name "ikmdevops"
+                git config user.email 'devops@ikm.dev'
+                git pull -p
+
+                git apply update_build.patch
+                git apply update_post_build.patch
+                git apply update_release.patch
+                git pull -p;
+                git commit -am"Updated DATA_PROPERTIES_VERSION environment to $LATEST_VERSION"
+                git push
           
             
           
