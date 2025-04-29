@@ -10,7 +10,7 @@ on:
       - completed
 
 env:
-  DATA_PROPERTIES_VERSION: $LATEST_VERSION
+  DATA_PROPERTIES_VERSION: 1.27.0
 permissions:
   contents: write 
         
