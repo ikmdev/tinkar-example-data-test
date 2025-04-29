@@ -9,9 +9,7 @@ on:
     workflow_dispatch:
 
 env:
-  DATA_PROPERTIES_VERSION: 1.2.0
-
-
+  DATA_PROPERTIES_VERSION: 1.27.0
 jobs:
   pr-verification:
     name: Pull Request Validation
