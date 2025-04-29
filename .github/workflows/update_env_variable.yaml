@@ -4,6 +4,7 @@ run-name: 'Update Environment Workflow -- DATA_PROPERTIES_VERSION:${{github.even
 
 # Pipeline/Workflow Triggers
 on:
+   push:
    workflow_dispatch:
     # repository_dispatch:
     #     types:
@@ -64,19 +65,19 @@ jobs:
         - name: Download Files
           uses: actions/download-artifact@v3
           with:
-            name: update_build.yaml
+            name: update_build.patch
             path: patches
 
         - name: Download Files
           uses: actions/download-artifact@v3
           with:
-              name: update_post_build.yaml
+              name: update_post_build.patch
               path: patches
 
         - name: Download Files
           uses: actions/download-artifact@v3
           with:
-              name: update_release.yaml
+              name: update_release.patch
               path: patches
 
         - name: Testing files
