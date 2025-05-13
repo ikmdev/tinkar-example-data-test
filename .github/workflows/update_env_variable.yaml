@@ -4,11 +4,11 @@ run-name: 'Update Environment Workflow -- DATA_PROPERTIES_VERSION:${{github.even
 
 # Pipeline/Workflow Triggers
 on:
-   push:
-   workflow_dispatch:
-    # repository_dispatch:
-    #     types:
-    #       - update-repository-dispatch-trigger
+   # push:
+   # workflow_dispatch:
+    repository_dispatch:
+        types:
+          - update-repository-dispatch-trigger
 
 
 env:
@@ -19,12 +19,24 @@ jobs:
     update-job:
         name: Update Environment Property
         runs-on: ubuntu-24.04
-        # if: github.event_name == 'repository_dispatch' && github.repository_owner == 'ikmdev'
+        if: github.event_name == 'repository_dispatch' && github.repository_owner == 'ikmdev'
         steps:  
         - name: Checkout Repository
           uses: actions/checkout@v4
           with:
             token: ${{secrets.IKMDEVOPS_PAT_TOKEN}}
+
+        - name: Set Environment Variables Based On Reppo
+          id: getEnvironmentVar
+          run: |
+           if [ "$REPO" == "tinkar-starter-data" ]; then
+              echo "ENVIRONMENT=BUILD_PROPERTIES_VERSION" >> $GITHUB_OUTPUT
+           else
+            echo "ENVIRONMENT=DATA_PROPERTIES_VERSION" >> $GITHUB_OUTPUT
+           fi  
+          env:
+            REPO: ${{github.event.client_payload.origin_repo}}
+            
 
         - name: Update Env
           run: |
@@ -36,17 +48,16 @@ jobs:
                 IFS=',' read -ra files <<< "$FILE_NAMES"
 
                 for file in "${files[@]}"; do
-                  echo "Updating DATA_PROPERTIES_VERSION environment to $LATEST_VERSION tag in $file"
-                  yq e -i '.env.DATA_PROPERTIES_VERSION = "${{env.TEST}}"' .github/workflows/$file.yaml
-                  git diff -U1 -w --ignore-blank-lines | grep -E "\-\-\-|[\+\-]\s+DATA_PROPERTIES_VERSION" -B2 -A1| grep -v "^--$"  > update_$file.patch
+                  echo "Updating $ENVIRONMENT_VAR environment to $LATEST_VERSION tag in $file"
+                  yq e -i '.env.$ENVIRONMENT_VAR = "${{github.event.client_payload.version}}"' .github/workflows/$file.yaml
+                  git diff -U1 -w --ignore-blank-lines | grep -E "\-\-\-|[\+\-]\s+$ENVIRONMENT_VAR" -B2 -A1| grep -v "^--$"  > update_$file.patch
                   git restore .
-                  # git apply update_$file.patch
                 done
-
+                
                 git apply *.patch
                 git pull -p;
-                git commit -am"Updated DATA_PROPERTIES_VERSION environment to $LATEST_VERSION in $FILE_NAMES"
+                git commit -am"Updated $ENVIRONMENT_VAR environment to $LATEST_VERSION in $FILE_NAMES"
                 git push
           env:
-              LATEST_VERSION:  ${{env.TEST}}
               FILE_NAMES: ${{env.LIST_OF_FILES}}
+              ENVIRONMENT_VAR: ${{steps.getEnvironmentVar.outputs.ENVIRONMENT}}
