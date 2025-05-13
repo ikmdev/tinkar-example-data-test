@@ -1,6 +1,6 @@
 name: Update Environment Workflow
 
-run-name: 'Update Environment Workflow -- DATA_PROPERTIES_VERSION:${{github.event.client_payload.version}}'
+run-name: 'Update Environment Workflow -- ${{ github.event.client_payload.origin_repo == "github_action_test" && "DATA_PROPERTIES_VERSION" || "BUILD_PROPERTIES_VERSION" }}:${{github.event.client_payload.version}}'
 
 # Pipeline/Workflow Triggers
 on:
@@ -60,4 +60,5 @@ jobs:
                 git push
           env:
               FILE_NAMES: ${{env.LIST_OF_FILES}}
+              LATEST_VERSION: ${{github.event.client_payload.version}}
               ENVIRONMENT_VAR: ${{steps.getEnvironmentVar.outputs.ENVIRONMENT}}
