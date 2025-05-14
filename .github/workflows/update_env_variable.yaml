@@ -49,7 +49,7 @@ jobs:
 
                 for file in "${files[@]}"; do
                   echo "Updating $ENVIRONMENT_VAR environment to $LATEST_VERSION tag in $file"
-                  echo 'env.$ENVIRONMENT_VAR'
+                  echo 'env.${{steps.getEnvironmentVar.outputs.ENVIRONMENT}}'
                   yq e -i '.env.$ENVIRONMENT_VAR = "${{github.event.client_payload.version}}"' .github/workflows/$file.yaml
                   git diff -U1 -w --ignore-blank-lines | grep -E "\-\-\-|[\+\-]\s+$ENVIRONMENT_VAR" -B2 -A1| grep -v "^--$"  > update_$file.patch
                   git restore .
