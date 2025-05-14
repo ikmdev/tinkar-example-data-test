@@ -10,7 +10,7 @@ on:
 
 env:
   DATA_PROPERTIES_VERSION: 1.3.9
-  BUILD_PROPERTIES_VERSION: 1.2.0
+  BUILD_PROPERTIES_VERSION: 12.55.0
 jobs:
   pr-verification:
     name: Pull Request Validation
